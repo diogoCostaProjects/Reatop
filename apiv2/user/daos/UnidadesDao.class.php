@@ -104,33 +104,84 @@
                
         return $lista;
     }     
+
+
+    public function listId($id) {
+                        
+      $sql = $this->mysqli->prepare("
+      SELECT id, nome, cep, id_estado, id_cidade, endereco, bairro, numero, complemento
+      FROM `$this->tabela`
+      WHERE id='$id'
+      ORDER BY nome"
+      );
+      $sql->execute();
+      $sql->bind_result($this->id, $this->nome, $this->cep, $this->id_estado, $this->id_cidade, $this->endereco, $this->bairro, $this->numero, $this->complemento);
+      $sql->store_result();
+      $rows = $sql->num_rows;
+
+      if($rows == 0) {
+          $Param['rows'] = $rows;
+          $lista[] = $Param;
+      }
+      else{
+          while($row =  $sql->fetch()){
+        
+            $estados = new Estados();
+            $estados->RetornaNome($this->id_estado, $this->id_cidade);
+
+            $Param['id'] = $this->id;
+            $Param['nome'] = ucwords($this->nome);
+            $Param['cep'] = $this->cep;
+            $Param['estado'] = $estados->id_estado;
+            $Param['cidade'] = $estados->id_cidade;
+            $Param['endereco'] = $this->endereco;
+            $Param['bairro'] = $this->bairro;
+            $Param['numero'] = $this->numero;
+            $Param['complemento'] = $this->complemento;              
+            $Param['rows'] = $rows;
+            $Param['departamentos'] = $this->listDepartamentosUnidade($this->id);  
+            $lista[] = $Param;
+          }
+      }
+             
+      return $lista;
+  }     
       
-     
+  public function listDepartamentosUnidade($id) {
+          
+      
+          $sql = $this->mysqli->prepare("
+          SELECT d.id, d.nome
+          FROM app_departamentos as d 
+          INNER JOIN app_unidades_dep as ud on ud.app_departamentos_id = d.id
+          WHERE ud.app_unidades_id='$id'
+          ORDER BY d.nome"
+          );
+          $sql->execute();
+          $sql->bind_result($this->id_depto, $this->nome_depto);
+          $sql->store_result();
+          $rows = $sql->num_rows;
+
+          if($rows == 0) {
+              $Param['rows'] = $rows;
+              $lista[] = $Param;
+          }
+          else{
+              while($row =  $sql->fetch()){
+                          
+                $Param['id'] = $this->id_depto;
+                $Param['nome'] = ucwords($this->nome_depto);
+                $Param['rows'] = $rows;
+                $lista[] = $Param;
+              }
+          }
+                
+          return $lista;
+    }     
 
        
 
-        public function listId($id) {
-                        
-            $sql = $this->mysqli->prepare(" 
-            SELECT id, nome, data_de, data_ate, obs
-            FROM `$this->tabela`
-            WHERE id='$id'"
-            );
-            $sql->execute();
-            $sql->bind_result($this->id, $this->nome, $this->data_de, $this->data_ate, $this->obs);
-            $sql->fetch();
-            $sql->close();
-            
-            $Param['id'] = $this->id;
-            $Param['nome'] = ucwords($this->nome);
-            $Param['data_de'] = dataBR($this->data_de);
-            $Param['data_ate'] =  dataBR($this->data_ate);
-            $Param['days'] = $this->listDays($this->id);
-            
-            $lista[] = $Param;
-           
-            return $Param;
-        }     
+         
              
       }
 

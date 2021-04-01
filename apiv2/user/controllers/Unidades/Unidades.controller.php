@@ -21,6 +21,9 @@ class UnidadesController extends  Unidades {
     }  
     public function listall() {
         $this->model->listAll($this->model);
-    }      
+    }     
+    public function listid() {
+        $this->model->listId($this->model);
+    }  
     
 }

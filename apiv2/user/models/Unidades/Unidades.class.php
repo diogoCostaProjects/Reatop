@@ -46,9 +46,8 @@ class Unidades  {
         $this->secure->tokens_secure($this->input->token);   
         
         $result = $this->dao->listId($this->input->id);        
-
-        $resultArray[] = $result;
-        $json = json_encode($resultArray);
+        
+        $json = json_encode($result);
         echo $json;
     }
 
