@@ -3,13 +3,14 @@
   require_once MODELS . '/Conexao/Conexao.class.php';
   
 
-  class UnidadesDao extends Conexao {
+  class LocaisDao extends Conexao {
 
         public function __construct() {
             $this->Conecta();
             $this->tabela = "app_unidades";
             $this->tabela_dep = "app_unidades_dep";
-            $this->data_atual = date('Y-m-d H:i:s');             
+            $this->data_atual = date('Y-m-d H:i:s');       
+            $this->data = "teste";
         }
                 
 
