@@ -24,7 +24,7 @@ class Brieffing  {
                        
         $this->secure->tokens_secure($_POST['token']);     
        
-        $result = $this->dao->save($_POST['id_planejamento'], $_POST['id_local'], $_POST['cod_empresa'], $_POST['id_user'], $this->data_atual, $this->assinatura, $_POST['obs'], $_POST['conformidade'], $_POST['id_status']);   
+        $novo_brieffing = $this->dao->save($_POST['id_planejamento'], $_POST['id_local'], $_POST['cod_empresa'], $_POST['id_user'], $this->data_atual, $this->assinatura, $_POST['obs'], $_POST['conformidade'], $_POST['id_status']);   
                                   
         $resultArray[] = $result;
         $json = json_encode($resultArray);
