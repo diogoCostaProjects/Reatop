@@ -104,5 +104,15 @@ class Locais  {
         $json = json_encode($result);
         echo $json;
     }
+
+    public function listByQr() {
+                       
+        $this->secure->tokens_secure($this->input->token);     
+              
+        $result = $this->dao->listByQr($this->input->qrcode);   
+                
+        $json = json_encode($result);
+        echo $json;
+    }
        
 }

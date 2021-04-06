@@ -9,7 +9,8 @@
             $this->Conecta();
             $this->tabela = "app_planejamentos";
             // $this->tabela_locais = "app_Planejamentos_locais";
-            $this->data_atual = date('Y-m-d H:i:s');            
+            $this->data_atual = date('Y-m-d H:i:s'); 
+            $this->dia_atual =  date('Y-m-d');      
         }
                 
 
@@ -69,6 +70,138 @@
                
         return $lista;
     }     
+
+
+    public function listAllApp($id_user_app) {
+              
+
+      $sql = $this->mysqli->prepare("
+      SELECT p.id, p.id_para, p.app_rotas_id, p.data, p.data_de, p.data_ate, p.horario, p.data, p.status, a.id, a.nome, l.id, l.nome, l.setor, l.predio_bloco, l.obs, u.id, u.nome, u.cep, u.id_estado, u.id_cidade, u.endereco, u.bairro, u.numero, u.complemento, r.nome
+      FROM `$this->tabela` as p
+      INNER JOIN app_rotas as r on r.id = p.app_rotas_id
+      INNER JOIN app_rotas_locais as rl on rl.app_rotas_id = r.id
+      INNER JOIN app_atividades as a on a.id = rl.app_atividades_id
+      INNER JOIN app_locais as l on l.id = rl.app_locais_id
+      INNER JOIN app_unidades as u on u.id = r.app_unidades_id
+      WHERE p.id_para='$id_user_app' and (p.data_de <= '$this->dia_atual' and p.data_ate >= '$this->dia_atual') and p.fixa=2
+      GROUP BY a.id
+      ORDER BY p.id, p.data_de, p.horario"
+      );
+      $sql->execute();
+
+
+      $sql->bind_result($this->id, $this->id_para, $this->id_rota, $this->data, $this->data_de, $this->data_ate, $this->horario, $this->data, $this->status, $this->id_atividade, $this->atividade, $this->id_local, $this->nome_local, $this->setor_local, $this->predio_local, $this->obs_local, $this->id_unidade, $this->nome_unidade, $this->cep_unidade, $this->estado_unidade, $this->cidade_unidade, $this->endereco_unidade, $this->bairro_unidade, $this->numero_unidade, $this->complemento_unidade, $this->nome_rota);
+      $sql->store_result();
+      $rows = $sql->num_rows;
+
+
+      if($rows == 0) {
+          $Param['rows'] = $rows;
+          $lista[] = $Param;
+      }
+      else{
+          while($row =  $sql->fetch()) {
+
+            $estados = new Estados();
+            $estados->RetornaNome($this->estado_unidade, $this->cidade_unidade);
+
+            $Param['nome_unidade'] = $this->nome_unidade;
+            $Param['nome_local'] = $this->nome_local;
+            $Param['nome_rota'] = $this->nome_rota;
+            $Param['nome_atividade'] = $this->atividade;
+            $Param['data_de'] = dataBR($this->data_de);
+            $Param['data_ate'] = dataBR($this->data_ate);
+            $Param['horario'] = horaMin($this->horario);
+            $Param['detalhes']['id_planejamento'] = $this->id;
+            $Param['detalhes']['id_rota'] = $this->id_rota;
+            $Param['detalhes']['id_unidade'] = $this->id_unidade;
+            $Param['detalhes']['id_local'] = $this->id_local;
+            $Param['detalhes']['id_atividade'] = $this->id_atividade;
+            $Param['detalhes']['cep_unidade'] = $this->cep_unidade;
+            $Param['detalhes']['cidade_unidade'] = $estados->id_cidade;
+            $Param['detalhes']['estado_unidade'] = $estados->id_estado;
+            $Param['detalhes']['endereco_unidade'] = $this->endereco_unidade;
+            $Param['detalhes']['numero_unidade'] = $this->numero_unidade;
+            $Param['detalhes']['bairro_unidade'] = $this->bairro_unidade;
+            $Param['detalhes']['complemento_unidade'] = $this->complemento_unidade;
+            $Param['detalhes']['predio_local'] = $this->predio_local;
+            $Param['detalhes']['setor_local'] = $this->setor_local;
+            $Param['detalhes']['obs_local'] = $this->obs_local;
+            $Param['detalhes']['data'] = dataBR($this->data);
+            $Param['detalhes']['status'] = $this->status==1 ? 'Em aberto' : 'Finalizado';
+            $Param['rows'] = $rows;
+            $lista[] = $Param;
+          }
+      }
+             
+      return $lista;
+  }     
+
+
+  public function listFixasApp($id_user_app) {
+              
+
+    $sql = $this->mysqli->prepare("
+    SELECT p.id, p.id_para, p.app_rotas_id, p.data, p.data_de, p.data_ate, p.horario, p.data, p.status, a.id, a.nome, l.id, l.nome, l.setor, l.predio_bloco, l.obs, u.id, u.nome, u.cep, u.id_estado, u.id_cidade, u.endereco, u.bairro, u.numero, u.complemento, r.nome
+    FROM `$this->tabela` as p
+    INNER JOIN app_rotas as r on r.id = p.app_rotas_id
+    INNER JOIN app_rotas_locais as rl on rl.app_rotas_id = r.id
+    INNER JOIN app_atividades as a on a.id = rl.app_atividades_id
+    INNER JOIN app_locais as l on l.id = rl.app_locais_id
+    INNER JOIN app_unidades as u on u.id = r.app_unidades_id
+    WHERE p.id_para='$id_user_app' and (p.data_de <= '$this->dia_atual' and p.data_ate >= '$this->dia_atual') and p.fixa=1
+    GROUP BY a.id
+    ORDER BY p.id, p.data_de, p.horario"
+    );
+    $sql->execute();
+
+
+    $sql->bind_result($this->id, $this->id_para, $this->id_rota, $this->data, $this->data_de, $this->data_ate, $this->horario, $this->data, $this->status, $this->id_atividade, $this->atividade, $this->id_local, $this->nome_local, $this->setor_local, $this->predio_local, $this->obs_local, $this->id_unidade, $this->nome_unidade, $this->cep_unidade, $this->estado_unidade, $this->cidade_unidade, $this->endereco_unidade, $this->bairro_unidade, $this->numero_unidade, $this->complemento_unidade, $this->nome_rota);
+    $sql->store_result();
+    $rows = $sql->num_rows;
+
+
+    if($rows == 0) {
+        $Param['rows'] = $rows;
+        $lista[] = $Param;
+    }
+    else{
+        while($row =  $sql->fetch()) {
+
+          $estados = new Estados();
+          $estados->RetornaNome($this->estado_unidade, $this->cidade_unidade);
+                   
+          $Param['nome_unidade'] = $this->nome_unidade;
+          $Param['nome_local'] = $this->nome_local;
+          $Param['nome_rota'] = $this->nome_rota;
+          $Param['nome_atividade'] = $this->atividade;
+          $Param['data_de'] = dataBR($this->data_de);
+          $Param['data_ate'] = dataBR($this->data_ate);
+          $Param['horario'] = horaMin($this->horario);
+          $Param['detalhes']['id_planejamento'] = $this->id;
+          $Param['detalhes']['id_rota'] = $this->id_rota;
+          $Param['detalhes']['id_unidade'] = $this->id_unidade;
+          $Param['detalhes']['id_local'] = $this->id_local;
+          $Param['detalhes']['id_atividade'] = $this->id_atividade;
+          $Param['detalhes']['cep_unidade'] = $this->cep_unidade;
+          $Param['detalhes']['cidade_unidade'] = $estados->id_cidade;
+          $Param['detalhes']['estado_unidade'] = $estados->id_estado;
+          $Param['detalhes']['endereco_unidade'] = $this->endereco_unidade;
+          $Param['detalhes']['numero_unidade'] = $this->numero_unidade;
+          $Param['detalhes']['bairro_unidade'] = $this->bairro_unidade;
+          $Param['detalhes']['complemento_unidade'] = $this->complemento_unidade;
+          $Param['detalhes']['predio_local'] = $this->predio_local;
+          $Param['detalhes']['setor_local'] = $this->setor_local;
+          $Param['detalhes']['obs_local'] = $this->obs_local;
+          $Param['detalhes']['data'] = dataBR($this->data);
+          $Param['detalhes']['status'] = $this->status==1 ? 'Em aberto' : 'Finalizado';
+          $Param['rows'] = $rows;
+          $lista[] = $Param;
+        }
+    }
+           
+    return $lista;
+}     
 
   //     public function savePlanejamentosLocais($id_rota, $id_local, $id_atividade) {
         

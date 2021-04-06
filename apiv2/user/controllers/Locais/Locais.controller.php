@@ -25,5 +25,8 @@ class LocaisController extends  Locais {
     public function listid() {
         $this->model->listId($this->model);
     }    
+    public function listbyqr() {
+        $this->model->listByQr($this->model);
+    }   
     
 }

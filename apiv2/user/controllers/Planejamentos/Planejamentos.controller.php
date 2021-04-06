@@ -21,7 +21,13 @@ class PlanejamentosController extends  Planejamentos {
     }  
     public function listallgestor() {
         $this->model->listAllGestor($this->model);
-    }     
+    }    
+    public function listallapp() {
+        $this->model->listAllApp($this->model);
+    }      
+    public function listfixasapp() {
+        $this->model->listFixasApp($this->model);
+    } 
     public function listid() {
         $this->model->listId($this->model);
     }  

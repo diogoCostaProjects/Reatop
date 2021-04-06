@@ -3,15 +3,15 @@
 // require_once MODELS . '/Conexao/Conexao.class.php';
 require_once MODELS . '/Secure/Secure.class.php';
 require_once MODELS . '/Estados/Estados.class.php';
-require_once DAOS . '/PlanejamentosDao.class.php';
+require_once DAOS . '/BrieffingDao.class.php';
 
 
 
-class Planejamentos  {
+class Brieffing  {
 
     public function __construct() {
 
-        $this->dao = new PlanejamentosDao();
+        $this->dao = new BrieffingDao();
 
         $request = file_get_contents('php://input');
         $this->input = json_decode($request);
@@ -22,44 +22,44 @@ class Planejamentos  {
     
     public function save() {
                        
-        $this->secure->tokens_secure($this->input->token);     
-                      
-        $result = $this->dao->save($this->input->id_unidade, $this->input->id_rota, $this->input->cod_empresa, $this->input->id_de, $this->input->id_para, dataUS($this->input->data_de), dataUS($this->input->data_ate), $this->input->horario, $this->input->fixa, $this->data_atual, $status=1);   
+        $this->secure->tokens_secure($_POST['token']);     
+       
+        $result = $this->dao->save($_POST['id_planejamento'], $_POST['id_local'], $_POST['cod_empresa'], $_POST['id_user'], $this->data_atual, $this->assinatura, $_POST['obs'], $_POST['conformidade'], $_POST['id_status']);   
                                   
         $resultArray[] = $result;
         $json = json_encode($resultArray);
         echo $json;
     }
 
-    public function listAllGestor() {
+    // public function listAllGestor() {
                        
-        $this->secure->tokens_secure($this->input->token);     
+    //     $this->secure->tokens_secure($this->input->token);     
               
-        $result = $this->dao->listAllGestor($this->input->cod_empresa, dataUS($this->input->data_de), dataUS($this->input->data_ate));   
+    //     $result = $this->dao->listAllGestor($this->input->cod_empresa, dataUS($this->input->data_de), dataUS($this->input->data_ate));   
                 
-        $json = json_encode($result);
-        echo $json;
-    }
+    //     $json = json_encode($result);
+    //     echo $json;
+    // }
 
-    public function listAllApp() {
+    // public function listAllApp() {
                        
-        $this->secure->tokens_secure($this->input->token);     
+    //     $this->secure->tokens_secure($this->input->token);     
               
-        $result = $this->dao->listAllApp($this->input->id_user);   
+    //     $result = $this->dao->listAllApp($this->input->id_user);   
                 
-        $json = json_encode($result);
-        echo $json;
-    }
+    //     $json = json_encode($result);
+    //     echo $json;
+    // }
 
-    public function listFixasApp() {
+    // public function listFixasApp() {
                        
-        $this->secure->tokens_secure($this->input->token);     
+    //     $this->secure->tokens_secure($this->input->token);     
               
-        $result = $this->dao->listFixasApp($this->input->id_user);   
+    //     $result = $this->dao->listFixasApp($this->input->id_user);   
                 
-        $json = json_encode($result);
-        echo $json;
-    }
+    //     $json = json_encode($result);
+    //     echo $json;
+    // }
 
     // public function update() {
             

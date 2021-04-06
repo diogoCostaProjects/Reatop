@@ -136,6 +136,43 @@
              
       return $lista;
   }     
+
+  public function listByQr($qrcode) {
+                  
+      
+    $sql = $this->mysqli->prepare("
+    SELECT id, nome, setor, predio_bloco, obs, data_cadastro, status
+    FROM `$this->tabela`
+    WHERE qrcode='$qrcode'
+    ORDER BY nome"
+    );
+    $sql->execute();
+    $sql->bind_result($this->id, $this->nome, $this->setor, $this->predio_bloco, $this->obs, $this->data_cadastro,  $this->status);
+    $sql->store_result();
+    $rows = $sql->num_rows;
+
+    if($rows == 0) {
+        $Param['rows'] = $rows;
+        $lista[] = $Param;
+    }
+    else{
+        while($row =  $sql->fetch()){
+                    
+          $Param['id'] = $this->id;
+          $Param['nome'] = ucwords($this->nome);
+          $Param['setor'] = $this->setor;
+          $Param['predio_bloco'] = $this->predio_bloco;
+          $Param['obs'] = $this->obs;
+          $Param['data_cadastro'] = dataBR($this->data_cadastro);
+          $Param['status'] = $this->status;              
+          $Param['rows'] = $rows;
+          $Param['contatos'] = $this->listContatos($this->id);      
+          $lista[] = $Param;
+        }
+    }
+           
+    return $lista;
+}     
      
 
   public function listContatos($id) {
