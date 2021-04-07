@@ -87,11 +87,7 @@
         }
 
         public function listAppUsers($cod_empresa){
-          
-          // echo "SELECT id, nome, email, cpf, celular
-          // FROM `$this->tabela`
-          // WHERE cod_empresa = '$cod_empresa' and tipo=3 and status=1"; exit;
-
+                    
           $sql = $this->mysqli->prepare("
           SELECT id, nome, email, cpf, celular
           FROM `$this->tabela`
