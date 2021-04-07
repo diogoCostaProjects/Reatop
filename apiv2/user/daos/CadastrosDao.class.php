@@ -86,6 +86,73 @@
           return $Param;
         }
 
+        public function listAppUsers($cod_empresa){
+          
+          // echo "SELECT id, nome, email, cpf, celular
+          // FROM `$this->tabela`
+          // WHERE cod_empresa = '$cod_empresa' and tipo=3 and status=1"; exit;
+
+          $sql = $this->mysqli->prepare("
+          SELECT id, nome, email, cpf, celular
+          FROM `$this->tabela`
+          WHERE cod_empresa = '$cod_empresa' and tipo=3 and status=1
+          ORDER BY nome"
+          );
+          $sql->execute();
+          $sql->bind_result($this->id, $this->nome, $this->email, $this->cpf, $this->celular);
+          $sql->store_result();
+          $rows = $sql->num_rows;
+          
+          if($rows ==0){
+            $Param['rows'] = $rows;
+            $lista[] = $Param;
+          }
+          else {
+              while($row = $sql->fetch()) {
+                  $Param['id'] = $this->id;
+                  $Param['nome'] = $this->nome;
+                  $Param['email'] = $this->email;
+                  $Param['cpf'] = $this->cpf;
+                  $Param['celular'] = $this->celular;
+                  $Param['rows'] = $rows;
+                  $lista[] = $Param;
+              }
+          }
+          return $lista;
+        }
+
+
+        public function listGestoresUsers($cod_empresa){
+          
+          $sql = $this->mysqli->prepare("
+          SELECT id, nome, email, cpf, celular
+          FROM `$this->tabela`
+          WHERE cod_empresa = '$cod_empresa' and tipo=2 and status=1
+          ORDER BY nome"
+          );
+          $sql->execute();
+          $sql->bind_result($this->id, $this->nome, $this->email, $this->cpf, $this->celular);
+          $sql->store_result();
+          $rows = $sql->num_rows;
+          
+          if($rows ==0){
+            $Param['rows'] = $rows;
+            $lista[] = $Param;
+          }
+          else {
+              while($row = $sql->fetch()) {
+                  $Param['id'] = $this->id;
+                  $Param['nome'] = $this->nome;
+                  $Param['email'] = $this->email;
+                  $Param['cpf'] = $this->cpf;
+                  $Param['celular'] = $this->celular;
+                  $Param['rows'] = $rows;
+                  $lista[] = $Param;
+              }
+          }
+          return $lista;
+        }
+
         public function savePassword($cpf, $password){
         
               $this->custo = '08';
