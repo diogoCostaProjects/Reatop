@@ -20,11 +20,11 @@ class Brieffing  {
         $this->data_atual = date('Y-m-d H:i:s');
     }
     
-    public function save() {
+    public function iniciar() { // starta o brieffing para depois salvar as repostas
                        
-        $this->secure->tokens_secure($_POST['token']);     
+        $this->secure->tokens_secure($this->input->token);     
        
-        $novo_brieffing = $this->dao->save($_POST['id_planejamento'], $_POST['id_local'], $_POST['cod_empresa'], $_POST['id_user'], $this->data_atual, $this->assinatura, $_POST['obs'], $_POST['conformidade'], $_POST['id_status']);   
+        $result = $this->dao->save($this->input->id_planejamento, $this->input->id_local, $this->input->cod_empresa, $this->input->id_user, $this->data_atual, $this->input->obs, $this->input->conformidade, $this->input->id_status);   
                                   
         $resultArray[] = $result;
         $json = json_encode($resultArray);

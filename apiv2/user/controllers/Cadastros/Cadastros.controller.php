@@ -26,6 +26,13 @@ class CadastrosController extends Cadastros {
     public function createpassword() {
         $this->model->createPassword($this->model);
     }
+    public function listappusers() {
+        $this->model->listAppUsers($this->model);
+    }
+    public function listgestoresusers() {
+        $this->model->listGestoresUsers($this->model);
+    }
+    
     
     
     // public function loginface() {
