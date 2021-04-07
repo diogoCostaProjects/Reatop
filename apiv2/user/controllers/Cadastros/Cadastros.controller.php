@@ -32,7 +32,10 @@ class CadastrosController extends Cadastros {
     public function listgestoresusers() {
         $this->model->listGestoresUsers($this->model);
     }
+<<<<<<< HEAD
     
+=======
+>>>>>>> fc9b5aecd85408a582e2dfc43d267d78297568c7
     
     
     // public function loginface() {
